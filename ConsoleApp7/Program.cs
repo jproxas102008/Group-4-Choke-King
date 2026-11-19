@@ -1041,3 +1041,40 @@ class Program
 
         Pause();
     }
+
+    // RESET SALES RAMIREZ
+    static void ResetSales()
+    {
+        Console.Clear();
+
+        Console.WriteLine("==================================");
+        Console.WriteLine("           RESET SALES");
+        Console.WriteLine("==================================");
+
+        Console.Write("Are you sure? (Y/N): ");
+        string choice = Console.ReadLine()?.Trim().ToUpper() ?? "";
+
+        if (choice == "Y")
+        {
+            if (File.Exists(filePath))
+            {
+                File.WriteAllText(filePath, "");
+            }
+
+            Console.WriteLine("\nSales successfully reset!");
+        }
+        else
+        {
+            Console.WriteLine("\nReset cancelled.");
+        }
+
+        Pause();
+    }
+
+    // PAUSE PROGRAM BAES
+    static void Pause()
+    {
+        Console.WriteLine("\nPress any key to continue...");
+        Console.ReadKey();
+    }
+}
