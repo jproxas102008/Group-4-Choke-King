@@ -9,7 +9,7 @@ using System.Globalization;
 class Program
 {
     // RESTAURANT INFORMATION PATRICK
-    static string restaurantName = "CHOKE KINGINA MO";
+    static string restaurantName = "CHOKE KING";
 
     // MENU ARRAYS PATRICK
     static int[] itemNumbers = { 1, 2, 3, 4, 5, 6 };
@@ -48,7 +48,7 @@ class Program
             Console.Clear();
 
             Console.WriteLine("==================================");
-            Console.WriteLine("       ChOKE KINGINA MO");
+            Console.WriteLine("       CHOKE KING");
             Console.WriteLine("==================================");
             Console.WriteLine("[1] Customer View");
             Console.WriteLine("[2] Cashier View");
@@ -302,7 +302,7 @@ class Program
         }
     }
     // REVIEW ORDER GALLANO
-    static void ReviewOrder()
+    static void ReviewOrder2()
     {
         while (true)
         {
