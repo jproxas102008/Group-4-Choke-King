@@ -1042,7 +1042,7 @@ class Program
         Pause();
     }
 
-    // RESET SALES BAES
+    // RESET SALES Dren BAES
     static void ResetSales()
     {
         Console.Clear();
