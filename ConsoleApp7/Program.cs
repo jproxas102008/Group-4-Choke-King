@@ -301,3 +301,111 @@ class Program
             }
         }
     }
+    // REVIEW ORDER GALLANO
+    static void ReviewOrder()
+    {
+        while (true)
+        {
+            Console.Clear();
+
+            Console.WriteLine("==========================================");
+            Console.WriteLine("               ORDER REVIEW");
+            Console.WriteLine("==========================================");
+
+            Console.WriteLine("{0,-18} {1,8} {2,8} {3,12}",
+                "Food", "Price", "Qty", "Subtotal");
+
+            Console.WriteLine("------------------------------------------------");
+
+            for (int i = 0; i < menuNames.Length; i++)
+            {
+                if (cartQuantities[i] > 0)
+                {
+                    decimal subtotal =
+                        menuPrices[i] * cartQuantities[i];
+
+                    Console.WriteLine("{0,-18} {1,8:F2} {2,8} {3,12:F2}",
+                        menuNames[i],
+                        menuPrices[i],
+                        cartQuantities[i],
+                        subtotal);
+                }
+            }
+
+            decimal total = CalculateTotal();
+
+            Console.WriteLine("------------------------------------------------");
+            Console.WriteLine("ORDER TOTAL: PHP " + total.ToString("F2"));
+
+            Console.WriteLine("\n[1] Add More Items");
+            Console.WriteLine("[2] Confirm and Pay");
+            Console.WriteLine("[3] Cancel Order");
+
+            Console.Write("\nEnter choice: ");
+
+            string choice = Console.ReadLine()?.Trim() ?? "";
+
+            switch (choice)
+            {
+                case "1":
+                    CustomerAddMoreItems();
+                    break;
+
+                case "2":
+                    if (total > 0)
+                    {
+                        ProcessPayment(total);
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Empty order cannot proceed.");
+                        Pause();
+                    }
+                    break;
+
+                case "3":
+                    Array.Clear(cartQuantities, 0, cartQuantities.Length);
+
+                    Console.WriteLine("\nOrder cancelled.");
+                    Pause();
+                    return;
+
+                default:
+                    Console.WriteLine("\nInvalid choice.");
+                    Pause();
+                    break;
+            }
+        }
+    }
+
+    // ADD MORE ITEMS GALLANO
+    static void CustomerAddMoreItems()
+    {
+        while (true)
+        {
+            Console.Clear();
+
+            DisplayFoodMenu();
+
+            Console.WriteLine("\n[1] Add Item");
+            Console.WriteLine("[2] Back to Order Review");
+            Console.Write("\nEnter choice: ");
+
+            string choice = Console.ReadLine()?.Trim() ?? "";
+
+            if (choice == "1")
+            {
+                AddItemToCart();
+            }
+            else if (choice == "2")
+            {
+                return;
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice.");
+                Pause();
+            }
+        }
+    }
