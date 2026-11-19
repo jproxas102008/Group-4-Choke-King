@@ -986,3 +986,58 @@ class Program
             Console.WriteLine("Unable to display saved receipt.");
         }
     }
+    // SALES REPORT ORZALES & BUENSUCESO
+    static void ShowSalesReport()
+    {
+        Console.Clear();
+
+        Console.WriteLine("==================================");
+        Console.WriteLine("           SALES REPORT");
+        Console.WriteLine("==================================");
+
+        int orderCount = 0;
+        decimal totalSales = 0;
+
+        try
+        {
+            if (File.Exists(filePath))
+            {
+                string[] records = File.ReadAllLines(filePath);
+
+                foreach (string record in records)
+                {
+                    string[] fields = record.Split('|');
+
+                    if (fields.Length >= 6 &&
+                        fields[1] == "PAID" &&
+                        decimal.TryParse(
+                            fields[2],
+                            NumberStyles.Number,
+                            CultureInfo.InvariantCulture,
+                            out decimal total))
+                    {
+                        orderCount++;
+                        totalSales += total;
+                    }
+                }
+            }
+
+            Console.WriteLine("\nCompleted Orders: " + orderCount);
+
+            Console.WriteLine("Total Sales: PHP " +
+                totalSales.ToString("F2"));
+
+            if (orderCount == 0)
+            {
+                Console.WriteLine("\nNo sales yet");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("\nUnable to read sales records: " + ex.Message);
+        }
+
+        Console.WriteLine("\n==================================");
+
+        Pause();
+    }
