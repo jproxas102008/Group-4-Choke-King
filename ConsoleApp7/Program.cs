@@ -1042,7 +1042,7 @@ class Program
         Pause();
     }
 
-    // RESET SALES RAMIREZ
+    // RESET SALES BAES
     static void ResetSales()
     {
         Console.Clear();
