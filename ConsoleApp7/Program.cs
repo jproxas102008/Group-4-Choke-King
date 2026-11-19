@@ -774,3 +774,49 @@ class Program
 
         return false;
     }
+    // DISPLAY RECEIPT VINAS
+    static void DisplayReceipt(
+        string orderId,
+        decimal total,
+        decimal cash,
+        decimal change)
+    {
+        Console.Clear();
+
+        Console.WriteLine("==========================================");
+        Console.WriteLine("              " + restaurantName);
+        Console.WriteLine("==========================================");
+
+        Console.WriteLine("Order ID: " + orderId);
+        Console.WriteLine("Status: PAID");
+
+        Console.WriteLine("------------------------------------------");
+
+        Console.WriteLine("{0,-18} {1,6} {2,5} {3,10}",
+            "Item", "Price", "Qty", "Subtotal");
+
+        for (int i = 0; i < menuNames.Length; i++)
+        {
+            if (cartQuantities[i] > 0)
+            {
+                decimal subtotal =
+                    menuPrices[i] * cartQuantities[i];
+
+                Console.WriteLine("{0,-18} {1,6:F2} {2,5} {3,10:F2}",
+                    menuNames[i],
+                    menuPrices[i],
+                    cartQuantities[i],
+                    subtotal);
+            }
+        }
+
+        Console.WriteLine("------------------------------------------");
+
+        Console.WriteLine("Total:  PHP " + total.ToString("F2"));
+        Console.WriteLine("Cash:   PHP " + cash.ToString("F2"));
+        Console.WriteLine("Change: PHP " + change.ToString("F2"));
+
+        Console.WriteLine("==========================================");
+        Console.WriteLine("       THANK YOU FOR YOUR ORDER!");
+        Console.WriteLine("==========================================");
+    }
