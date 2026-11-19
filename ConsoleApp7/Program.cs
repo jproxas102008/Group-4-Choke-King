@@ -865,3 +865,124 @@ class Program
             }
         }
     }
+
+    // FIND SAVED ORDER ACAYLAR
+    static void FindOrder()
+    {
+        Console.Clear();
+
+        Console.WriteLine("==================================");
+        Console.WriteLine("            FIND ORDER");
+        Console.WriteLine("==================================");
+
+        Console.Write("Enter Order ID: ");
+
+        string orderId = Console.ReadLine()?.Trim() ?? "";
+
+        if (string.IsNullOrWhiteSpace(orderId))
+        {
+            Console.WriteLine("\nOrder ID cannot be blank.");
+            Pause();
+            return;
+        }
+
+        try
+        {
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("\nOrder not found.");
+                Pause();
+                return;
+            }
+
+            string[] records = File.ReadAllLines(filePath);
+
+            foreach (string record in records)
+            {
+                string[] fields = record.Split('|');
+
+                if (fields.Length > 0 &&
+                    fields[0].Equals(
+                        orderId,
+                        StringComparison.OrdinalIgnoreCase))
+                {
+                    DisplaySavedReceipt(fields);
+                    Pause();
+                    return;
+                }
+            }
+
+            Console.WriteLine("\nOrder not found.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("\nUnable to read records: " + ex.Message);
+        }
+
+        Pause();
+    }
+
+    // DISPLAY SAVED RECEIPT ACAYLAR
+    static void DisplaySavedReceipt(string[] fields)
+    {
+        try
+        {
+            if (fields.Length < 6)
+            {
+                Console.WriteLine("Invalid saved record.");
+                return;
+            }
+
+            string orderId = fields[0];
+            string status = fields[1];
+
+            decimal total = decimal.Parse(fields[2], CultureInfo.InvariantCulture);
+            decimal cash = decimal.Parse(fields[3], CultureInfo.InvariantCulture);
+            decimal change = decimal.Parse(fields[4], CultureInfo.InvariantCulture);
+
+            int itemCount = int.Parse(fields[5]);
+
+            if (itemCount < 1 || fields.Length != 6 + itemCount * 4)
+            {
+                Console.WriteLine("Invalid saved record.");
+                return;
+            }
+
+            Console.WriteLine("\n==========================================");
+            Console.WriteLine("              " + restaurantName);
+            Console.WriteLine("==========================================");
+
+            Console.WriteLine("Order ID: " + orderId);
+            Console.WriteLine("Status: " + status);
+
+            Console.WriteLine("------------------------------------------");
+
+            Console.WriteLine("{0,-18} {1,6} {2,5} {3,10}",
+                "Item", "Price", "Qty", "Subtotal");
+
+            int position = 6;
+
+            for (int i = 0; i < itemCount; i++)
+            {
+                string name = fields[position++];
+                decimal price = decimal.Parse(fields[position++], CultureInfo.InvariantCulture);
+                int quantity = int.Parse(fields[position++]);
+                decimal subtotal = decimal.Parse(fields[position++], CultureInfo.InvariantCulture);
+
+                Console.WriteLine("{0,-18} {1,6:F2} {2,5} {3,10:F2}",
+                    name, price, quantity, subtotal);
+            }
+
+            Console.WriteLine("------------------------------------------");
+
+            Console.WriteLine("Total:  PHP " + total.ToString("F2"));
+            Console.WriteLine("Cash:   PHP " + cash.ToString("F2"));
+            Console.WriteLine("Change: PHP " + change.ToString("F2"));
+
+            Console.WriteLine("==========================================");
+        }
+        catch
+        {
+            Console.WriteLine("Unable to display saved receipt.");
+        }
+    }
