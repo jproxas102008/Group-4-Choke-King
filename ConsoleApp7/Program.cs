@@ -409,3 +409,241 @@ class Program
             }
         }
     }
+    // PROCESS PAYMENT DELENA
+
+
+    static void ProcessPayment(decimal total)
+    {
+        decimal cash = 0;
+        bool paymentAccepted = false;
+        string paymentMethod = "";
+
+       
+        Console.Clear();
+
+        Console.WriteLine("==================================");
+        Console.WriteLine("         PAYMENT METHOD");
+        Console.WriteLine("==================================");
+        Console.WriteLine("[1] Cash");
+        Console.WriteLine("[2] Online Payment");
+        Console.Write("\nChoose payment method: ");
+
+        string paymentChoice = Console.ReadLine()?.Trim() ?? "";
+
+        if (paymentChoice == "1")
+        {
+            paymentMethod = "Cash";
+        }
+        else if (paymentChoice == "2")
+        {
+            Console.WriteLine("\n==================================");
+            Console.WriteLine("       ONLINE PAYMENT");
+            Console.WriteLine("==================================");
+            Console.WriteLine("[1] GCash");
+            Console.WriteLine("[2] Maya");
+            Console.Write("\nChoose online payment: ");
+
+            string onlineChoice = Console.ReadLine()?.Trim() ?? "";
+
+            if (onlineChoice == "1")
+            {
+                paymentMethod = "GCash (Simulation)";
+            }
+            else if (onlineChoice == "2")
+            {
+                paymentMethod = "Maya (Simulation)";
+            }
+            else
+            {
+                Console.WriteLine("\nInvalid online payment method.");
+                Pause();
+                return;
+            }
+
+            Console.WriteLine("\nProcessing " + paymentMethod + "...");
+            Pause();
+
+            cash = total;
+            paymentAccepted = true;
+
+            Console.WriteLine("\nOnline payment successful! (SIMULATION)");
+        }
+        else
+        {
+            Console.WriteLine("\nInvalid payment method.");
+            Pause();
+            return;
+        }
+       
+        while (!paymentAccepted)
+        {
+            Console.Clear();
+
+            Console.WriteLine("==================================");
+            Console.WriteLine("            PAYMENT");
+            Console.WriteLine("==================================");
+
+            Console.WriteLine("Order Total: PHP " + total.ToString("F2"));
+
+            Console.Write("\nEnter Cash Amount: PHP ");
+
+            string cashInput = Console.ReadLine()?.Trim() ?? "";
+
+            if (!IsValidMoney(cashInput, out cash))
+            {
+                Console.WriteLine("\nInvalid amount.");
+                Console.WriteLine("Enter a nonnegative amount with");
+                Console.WriteLine("a maximum of two decimal places.");
+
+                Pause();
+                continue;
+            }
+
+            if (cash < total)
+            {
+                Console.WriteLine("\nInsufficient payment!");
+
+                Console.WriteLine("Still Needed: PHP " +
+                    (total - cash).ToString("F2"));
+
+                Console.WriteLine("\n[1] Re-enter Full Cash Amount");
+                Console.WriteLine("[2] Cancel Order");
+
+                Console.Write("Enter choice: ");
+
+                string choice = Console.ReadLine()?.Trim() ?? "";
+
+                if (choice == "1")
+                {
+                    continue;
+                }
+                else if (choice == "2")
+                {
+                    Array.Clear(cartQuantities, 0, cartQuantities.Length);
+
+                    Console.WriteLine("\nOrder cancelled.");
+                    Pause();
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice. Please try again.");
+                    Pause();
+                }
+
+                continue;
+            }
+
+            paymentAccepted = true;
+        }
+
+        decimal change = cash - total;
+
+        string orderId = GenerateOrderId();
+
+        while (true)
+        {
+            bool saved = SaveOrder(
+                orderId,
+                total,
+                cash,
+                change
+            );
+
+            if (saved)
+            {
+                Console.WriteLine("\nPayment successful!");
+
+                DisplayReceipt(
+                    orderId,
+                    total,
+                    cash,
+                    change
+                );
+
+             
+                Console.WriteLine("Payment Method: " + paymentMethod);
+
+                Array.Clear(cartQuantities, 0, cartQuantities.Length);
+
+                Pause();
+                return;
+            }
+
+            Console.WriteLine("\nUnable to save the transaction.");
+
+            Console.WriteLine("[1] Retry Saving");
+            Console.WriteLine("[2] Return to Main Menu");
+
+            Console.Write("Enter choice: ");
+
+            string choice = Console.ReadLine()?.Trim() ?? "";
+
+            if (choice == "1")
+            {
+                if (OrderExists(orderId))
+                {
+                    Console.WriteLine("\nOrder already exists in records.");
+                    Console.WriteLine("Please check the saved transaction.");
+                    Pause();
+                    return;
+                }
+
+                continue;
+            }
+            else if (choice == "2")
+            {
+                Console.WriteLine("\nTransaction was not confirmed.");
+                Pause();
+                return;
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice.");
+                Pause();
+            }
+        }
+    }
+
+
+    // VALIDATE MONEY INPUT DELENA
+    static bool IsValidMoney(string input, out decimal amount)
+    {
+        amount = 0;
+
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return false;
+        }
+
+        input = input.Trim();
+
+        if (input.StartsWith("-"))
+        {
+            return false;
+        }
+
+        int decimalIndex = input.IndexOf('.');
+
+        if (decimalIndex >= 0)
+        {
+            if (input.IndexOf('.', decimalIndex + 1) >= 0)
+            {
+                return false;
+            }
+
+            int decimalPlaces = input.Length - decimalIndex - 1;
+
+            if (decimalPlaces < 1 || decimalPlaces > 2)
+            {
+                return false;
+            }
+        }
+
+        return decimal.TryParse(
+            input,
+            NumberStyles.AllowDecimalPoint,
+            CultureInfo.InvariantCulture,
+            out amount
+        ) && amount >= 0;
+    }
