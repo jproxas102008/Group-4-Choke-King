@@ -820,3 +820,48 @@ class Program
         Console.WriteLine("       THANK YOU FOR YOUR ORDER!");
         Console.WriteLine("==========================================");
     }
+
+    // CASHIER VIEW RAMIREZ
+    static void CashierView()
+    {
+        while (true)
+        {
+            Console.Clear();
+
+            Console.WriteLine("==================================");
+            Console.WriteLine("           CASHIER VIEW");
+            Console.WriteLine("==================================");
+
+            Console.WriteLine("[1] Find Order");
+            Console.WriteLine("[2] Sales Report");
+            Console.WriteLine("[3] Reset Sales");
+            Console.WriteLine("[4] Return to Main Menu");
+
+            Console.Write("\nEnter choice: ");
+
+            string choice = Console.ReadLine()?.Trim() ?? "";
+
+            switch (choice)
+            {
+                case "1":
+                    FindOrder();
+                    break;
+
+                case "2":
+                    ShowSalesReport();
+                    break;
+
+                case "3":
+                    ResetSales();
+                    break;
+
+                case "4":
+                    return;
+
+                default:
+                    Console.WriteLine("\nInvalid choice.");
+                    Pause();
+                    break;
+            }
+        }
+    }
