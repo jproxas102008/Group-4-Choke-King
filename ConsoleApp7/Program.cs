@@ -647,3 +647,130 @@ class Program
             out amount
         ) && amount >= 0;
     }
+    // GENERATE UNIQUE ORDER ID ESTRADA
+    static string GenerateOrderId()
+    {
+        int highestNumber = 0;
+
+        if (File.Exists(filePath))
+        {
+            string[] records = File.ReadAllLines(filePath);
+
+            foreach (string record in records)
+            {
+                string[] fields = record.Split('|');
+
+                if (fields.Length > 0 &&
+                    fields[0].StartsWith("ORD",
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    string numberPart = fields[0].Substring(3);
+
+                    if (int.TryParse(numberPart, out int number))
+                    {
+                        if (number > highestNumber)
+                        {
+                            highestNumber = number;
+                        }
+                    }
+                }
+            }
+        }
+
+        return "ORD" + (highestNumber + 1).ToString("D4");
+    }
+
+    // SAVE ORDER TO TEXT FILE ESTRADA
+    static bool SaveOrder(
+        string orderId,
+        decimal total,
+        decimal cash,
+        decimal change)
+    {
+        try
+        {
+            Directory.CreateDirectory(folderPath);
+
+            if (OrderExists(orderId))
+            {
+                return false;
+            }
+
+            StringBuilder record = new StringBuilder();
+
+            record.Append(orderId);
+            record.Append("|PAID");
+            record.Append("|" + total.ToString("F2", CultureInfo.InvariantCulture));
+            record.Append("|" + cash.ToString("F2", CultureInfo.InvariantCulture));
+            record.Append("|" + change.ToString("F2", CultureInfo.InvariantCulture));
+
+            int itemCount = 0;
+
+            for (int i = 0; i < menuNames.Length; i++)
+            {
+                if (cartQuantities[i] > 0)
+                {
+                    itemCount++;
+                }
+            }
+
+            record.Append("|" + itemCount);
+
+            for (int i = 0; i < menuNames.Length; i++)
+            {
+                if (cartQuantities[i] > 0)
+                {
+                    decimal subtotal =
+                        menuPrices[i] * cartQuantities[i];
+
+                    record.Append("|" + menuNames[i]);
+                    record.Append("|" + menuPrices[i].ToString("F2", CultureInfo.InvariantCulture));
+                    record.Append("|" + cartQuantities[i]);
+                    record.Append("|" + subtotal.ToString("F2", CultureInfo.InvariantCulture));
+                }
+            }
+
+            using (StreamWriter writer = new StreamWriter(filePath, true))
+            {
+                writer.WriteLine(record.ToString());
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Storage Error: " + ex.Message);
+            return false;
+        }
+    }
+
+    // CHECK IF ORDER ID EXISTS ESTRADA
+    static bool OrderExists(string orderId)
+    {
+        try
+        {
+            if (!File.Exists(filePath))
+            {
+                return false;
+            }
+
+            foreach (string line in File.ReadAllLines(filePath))
+            {
+                string[] fields = line.Split('|');
+
+                if (fields.Length > 0 &&
+                    fields[0].Equals(
+                        orderId,
+                        StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+        }
+        catch
+        {
+            return false;
+        }
+
+        return false;
+    }
