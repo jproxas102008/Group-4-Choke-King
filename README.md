@@ -29,7 +29,7 @@ Launching the System Using dotnet run
 
 Member and their Contribution
 Leader - John Patrick Roxas
-Created Documentaion File, PPT , READ ME, FLOWCHART
+Created Documentaion File and whats in it, PPT , READ ME, FLOWCHART, FLowChart Explanation
 Contribution in coding - RESTAURANT INFORMATION, MENU ARRAYS, CART QUANTITIES PATRICK, FILE STORAGE, REVISION
 
 Members
