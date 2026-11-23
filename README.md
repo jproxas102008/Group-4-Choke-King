@@ -29,7 +29,7 @@ Launching the System Using dotnet run
 
 Member and their Contribution
 Leader - John Patrick Roxas
-Created Documentaion File, PPT , READ ME
+Created Documentaion File, PPT , READ ME, FLOWCHART
 Contribution in coding - RESTAURANT INFORMATION, MENU ARRAYS, CART QUANTITIES PATRICK, FILE STORAGE, REVISION
 
 Members
@@ -63,7 +63,7 @@ Contribution in coding - CASHIER VIEW
 John Mark Buesoseso and Markjay Ramos Orzales
 Contribution in coding - SALES REPORT
 
-
+Flowchart PDF Link - file:///C:/Users/PC/Downloads/Choke%20King%203%20FlowCharts.pdf
 
 
 
